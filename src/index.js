@@ -2,6 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import pool from './config/db.js'; // Import the database connection pool
+import userRoutes from './routes/userRoutes.js'; // Import user routes
+import errorHandling from './middlewares/errorHandler.js'; // Import error handling middleware
+import createUserTable from './data/createUserTable.js'; // Import the function to create user table
 
 dotenv.config();
 
@@ -11,10 +14,16 @@ const PORT = process.env.PORT || 3001;
 // Middleware
 app.use(express.json());
 app.use(cors());
+app.use(errorHandling);
 
 // Routes
+app.use('/api', userRoutes); // Use user routes for API requests
+
 
 //Error handling middleware
+
+// Create the user table if it doesn't exist
+createUserTable();
 
 //Testing POSTGRESQL connection
 app.get('/', async (req, res) => {
